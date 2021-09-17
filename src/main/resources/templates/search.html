@@ -1,0 +1,80 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main}">
+
+<div layout:fragment="main_section">
+
+  <form th:action="@{/booking/search}" th:method="get">
+    <div class="row mt-3">
+      <div class="col-sm-2">
+        <label>
+          NAME:
+        </label>
+        <input type="text" name="name" class="form-control" th:value="${#request.getParameter('name')}">
+      </div>
+      <div class="col-sm-2">
+        <label>
+          DESCRIPTION:
+        </label>
+        <input type="text" name="description" class="form-control" th:value="${#request.getParameter('description')}">
+      </div>
+      <div class="col-sm-2">
+        <label>
+          ROOMS FROM:
+        </label>
+        <input type="number" name="rooms_from" class="form-control" th:value="${#request.getParameter('rooms_from')}">
+        </div>
+        <div class="col-sm-2">
+          <label>
+            ROOMS TO:
+          </label>
+          <input type="number" name="rooms_to" class="form-control" th:value="${#request.getParameter('rooms_to')}">
+        </div>
+        <div class="col-sm-2">
+          <label>
+            PRICE FROM:
+          </label>
+          <input type="number" name="price_from" class="form-control" th:value="${#request.getParameter('price_from')}">
+        </div>
+        <div class="col-sm-2">
+          <label>
+            PRICE TO:
+          </label>
+          <input type="number" name="price_to" class="form-control" th:value="${#request.getParameter('price_to')}">
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-sm-12">
+          <button class="btn btn-success">SEARCH</button>
+          <a class="btn btn-danger float-end" th:href="@{'/booking/search'}">REFRESH</a>
+        </div>
+      </div>
+  </form>
+  <hr/>
+  <div class="col-sm-6">
+    <div class="container">
+      <div class="row" th:each="bookingEntity: ${bookingEntities}">
+        <div class="p-5 mb-4 bg-light rounded-3">
+          <div class="container-fluid py-5">
+            <h1 class="display-5 fw-bold" th:text="${bookingEntity.name}"></h1>
+            <p class="col-md-8 fs-4" th:text="${bookingEntity.description}"></p>
+            <a class="btn btn-primary" th:href="@{'/booking/details/' + ${bookingEntity.id}}" th:text="Details"></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr/>
+  <th:block th:each="id : ${#numbers.sequence(1,pageCount)}">
+    <a class="btn btn-primary" th:classappend="${id} == ${#request.getParameter('page')} ? 'active' : ''" th:href="@{/booking/search(page=${id},
+    name=${#request.getParameter('name')},
+    description=${#request.getParameter('description')},
+    roomsFrom=${#request.getParameter('rooms_from')},
+    roomsTo=${#request.getParameter('rooms_to')},
+    priceFrom=${#request.getParameter('price_from')},
+    priceTo=${#request.getParameter('price_to')}
+    )}" th:text="${id}"></a>
+  </th:block>
+</div>
+
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" type="text/css">
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-6 offset-3">
+            <form th:action="@{/booking/add}" th:object="${bookingEntity}" method="post">
+                <label>
+                    NAME:
+                </label>
+                <input th:type="text" th:field="*{name}">
+                <label>
+                    DESCRIPTION:
+                </label>
+                <input th:type="text" th:field="*{description}">
+                <label>
+                    ROOMS:
+                </label>
+                <input th:type="number" th:field="*{rooms}">
+                <label>
+                    PRICE:
+                </label>
+                <input th:type="number" th:field="*{price}">
+                <button>ADD BOOKING</button>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6 offset-3">
+        <table>
+            <thead>
+            <tr>
+                <th>
+                    ID
+                </th>
+                <th>
+                    NAME
+                </th>
+                <th>
+                    DESCRIPTION
+                </th>
+                <th>
+                    ROOMS
+                </th>
+                <th>
+                    PRICE
+                </th>
+                <th>
+                    DETAILS
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="bk : ${bookings}">
+                <td th:text="${bk.id}"></td>
+                <td th:text="${bk.name}"></td>
+                <td th:text="${bk.description}"></td>
+                <td th:text="${bk.rooms}"></td>
+                <td th:text="${bk.price}"></td>
+                <td>
+                    <a th:href="@{'/booking/details/' + ${bk.id}}">
+                        DETAILS
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/bootstrap.bundle.js}"></script>
+</html>

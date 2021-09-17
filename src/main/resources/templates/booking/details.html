@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-6 offset-3">
+            <form th:action="@{/booking/update}" th:object="${bookingEntity}" method="post">
+                <input th:type="hidden" th:field="*{id}" th:value="${bookingEntity.id}">
+                <label>
+                    NAME:
+                </label>
+                <input th:type="text" th:field="*{name}" th:value="${bookingEntity.name}">
+                <label>
+                    DESCRIPTION:
+                </label>
+                <input th:type="text" th:field="*{description}" th:value="${bookingEntity.description}">
+                <label>
+                    ROOMS:
+                </label>
+                <input th:type="number" th:field="*{rooms}" th:value="${bookingEntity.rooms}">
+                <label>
+                    PRICE:
+                </label>
+                <input th:type="number" th:field="*{price}" th:value="${bookingEntity.price}">
+                <button>UPDATE BOOKING ENTITY</button>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <form th:action="@{'/booking/delete'}" method="post">
+            <input th:type="hidden" th:value="${bookingEntity.id}" name="id">
+            <button>DELETE BOOKING ENTITY</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>
