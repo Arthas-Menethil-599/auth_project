@@ -66,12 +66,13 @@ public class WebController {
     }
 
     @PostMapping(value = "register")
-    public String registerUser(@ModelAttribute UserModel userModel) {
+    public String registerUser(@ModelAttribute UserModel userModel, @RequestParam(name = "ava_pic") MultipartFile file) {
         if (userModel.getPassword().equals(userModel.getConfirmPassword())) {
             List<Role> roles = new ArrayList<>();
             roles.add(StaticConfig.ROLE_USER);
             DbUser dbUser = new DbUser(userModel.getEmail(), userModel.getPassword(), userModel.getFullName(),null, null, roles);
             userService.registerUser(dbUser);
+            doLoadPhoto(dbUser, file);
             return "redirect:/login";
         }
         else {
@@ -89,28 +90,7 @@ public class WebController {
     @PostMapping(value = "/upload-ava")
     public String uploadAva(@RequestParam(name = "ava_pic") MultipartFile file) {
         DbUser currentUser = getUser();
-
-        if(Objects.nonNull(currentUser)) {
-            if(file.getContentType().equals("image/jpeg") || file.getContentType().equals("image/png")) {
-                String uniqueName = DigestUtils.sha1Hex("user_avatar_" + currentUser.getId());
-                String ext = "png";
-                if (file.getContentType().equals("image/jpeg")) {
-                    ext = "jpg";
-                }
-                try {
-                    String fullPath = avaBaseUrl + uniqueName + "." + ext;
-                    byte[] bytes = file.getBytes();
-                    Path path = Paths.get(fullPath);
-                    Files.write(path, bytes);
-                    currentUser.setAva(fullPath);
-                    currentUser.setAvaHash(uniqueName + "." + ext);
-                    userService.updateUser(currentUser);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
+        doLoadPhoto(currentUser, file);
         return "redirect:/profile";
     }
 
@@ -150,5 +130,28 @@ public class WebController {
         }
         return null;
 
+    }
+
+    private void doLoadPhoto(DbUser currentUser, MultipartFile file) {
+        if(Objects.nonNull(currentUser)) {
+            if(file.getContentType().equals("image/jpeg") || file.getContentType().equals("image/png")) {
+                String uniqueName = DigestUtils.sha1Hex("user_avatar_" + currentUser.getId());
+                String ext = "png";
+                if (file.getContentType().equals("image/jpeg")) {
+                    ext = "jpg";
+                }
+                try {
+                    String fullPath = avaBaseUrl + uniqueName + "." + ext;
+                    byte[] bytes = file.getBytes();
+                    Path path = Paths.get(fullPath);
+                    Files.write(path, bytes);
+                    currentUser.setAva(fullPath);
+                    currentUser.setAvaHash(uniqueName + "." + ext);
+                    userService.updateUser(currentUser);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }
